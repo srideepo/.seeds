@@ -1,0 +1,164 @@
+[
+    {
+        "table_name": "salesorder",
+        "schema": "default",
+        "primary_key": [],
+        "columns": [
+            {
+                "name": "SalesOrderID",
+                "type": "int",
+                "size": null,
+                "references": null,
+                "unique": false,
+                "nullable": true,
+                "default": null,
+                "check": null
+            },
+            {
+                "name": "OrderQty",
+                "type": "int",
+                "size": null,
+                "references": null,
+                "unique": false,
+                "nullable": true,
+                "default": null,
+                "check": null
+            }
+        ],
+        "alter": {},
+        "checks": [],
+        "index": [],
+        "partitioned_by": [
+            {
+                "name": "batch_id",
+                "type": "int",
+                "size": null
+            },
+            {
+                "name": "batch_id2",
+                "type": "string",
+                "size": null
+            },
+            {
+                "name": "batch_32",
+                "type": "some_type",
+                "size": null
+            }
+        ],
+        "tablespace": null,
+        "if_not_exists": true,
+        "temp": false,
+        "stored_as": "TEXTFILE",
+        "row_format": "DELIMITED",
+        "location": "'s3://datalake/table_name/v1'",
+        "fields_terminated_by": "','",
+        "lines_terminated_by": null,
+        "map_keys_terminated_by": "'\\003'",
+        "collection_items_terminated_by": "'\\002'",
+        "external": false
+    },
+    {
+        "table_name": "salesorderdetail",
+        "schema": "default",
+        "primary_key": [],
+        "columns": [
+            {
+                "name": "SalesOrderDetailID",
+                "type": "int",
+                "size": null,
+                "references": null,
+                "unique": false,
+                "nullable": true,
+                "default": null,
+                "check": null
+            },
+            {
+                "name": "SalesOrderID",
+                "type": "int",
+                "size": null,
+                "references": null,
+                "unique": false,
+                "nullable": true,
+                "default": null,
+                "check": null
+            },
+            {
+                "name": "ProductID",
+                "type": "int",
+                "size": null,
+                "references": null,
+                "unique": false,
+                "nullable": true,
+                "default": null,
+                "check": null
+            },
+            {
+                "name": "OrderQty",
+                "type": "int",
+                "size": null,
+                "references": null,
+                "unique": false,
+                "nullable": true,
+                "default": null,
+                "check": null
+            },
+            {
+                "name": "LineTotal",
+                "type": "decimal",
+                "size": null,
+                "references": null,
+                "unique": false,
+                "nullable": true,
+                "default": null,
+                "check": null
+            }
+        ],
+        "alter": {},
+        "checks": [],
+        "index": [],
+        "partitioned_by": [
+            {
+                "name": "batch_id",
+                "type": "int",
+                "size": null
+            },
+            {
+                "name": "batch_id2",
+                "type": "string",
+                "size": null
+            },
+            {
+                "name": "batch_32",
+                "type": "some_type",
+                "size": null
+            }
+        ],
+        "constraints": {
+            "references": [
+                {
+                    "table": "salesorder",
+                    "columns": [
+                        "SalesOrderID"
+                    ],
+                    "schema": null,
+                    "on_delete": null,
+                    "on_update": null,
+                    "deferrable_initially": null,
+                    "name": "SalesOrderID",
+                    "constraint_name": "salesorderdetail_fk_1"
+                }
+            ]
+        },
+        "tablespace": null,
+        "if_not_exists": true,
+        "temp": false,
+        "stored_as": "TEXTFILE",
+        "row_format": "DELIMITED",
+        "location": "'s3://datalake/table_name/v1'",
+        "fields_terminated_by": "','",
+        "lines_terminated_by": null,
+        "map_keys_terminated_by": "'\\003'",
+        "collection_items_terminated_by": "'\\002'",
+        "external": false
+    }
+]
