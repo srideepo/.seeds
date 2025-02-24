@@ -1,164 +1,315 @@
 [
     {
-        "table_name": "salesorder",
-        "schema": "default",
+        "table_name": "D_Individual_Customer",
+        "schema": "dbo",
         "primary_key": [],
         "columns": [
             {
-                "name": "SalesOrderID",
+                "name": "IndividualCustomerKey",
                 "type": "int",
-                "size": null,
+                "size": [
+                    10,
+                    0
+                ],
+                "identity": [
+                    1,
+                    1
+                ],
                 "references": null,
                 "unique": false,
-                "nullable": true,
-                "default": null,
+                "nullable": false,
+                "default": "NULL",
                 "check": null
             },
             {
-                "name": "OrderQty",
+                "name": "IndividualCustomerID",
                 "type": "int",
+                "size": [
+                    10,
+                    0
+                ],
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
+                "check": null
+            },
+            {
+                "name": "FirstName",
+                "type": "nvarchar",
                 "size": null,
                 "references": null,
                 "unique": false,
-                "nullable": true,
-                "default": null,
+                "nullable": false,
+                "default": "NULL",
+                "check": null
+            },
+            {
+                "name": "LastName",
+                "type": "nvarchar",
+                "size": null,
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
                 "check": null
             }
         ],
         "alter": {},
         "checks": [],
         "index": [],
-        "partitioned_by": [
-            {
-                "name": "batch_id",
-                "type": "int",
-                "size": null
-            },
-            {
-                "name": "batch_id2",
-                "type": "string",
-                "size": null
-            },
-            {
-                "name": "batch_32",
-                "type": "some_type",
-                "size": null
-            }
-        ],
+        "partitioned_by": [],
         "tablespace": null,
-        "if_not_exists": true,
-        "temp": false,
-        "stored_as": "TEXTFILE",
-        "row_format": "DELIMITED",
-        "location": "'s3://datalake/table_name/v1'",
-        "fields_terminated_by": "','",
-        "lines_terminated_by": null,
-        "map_keys_terminated_by": "'\\003'",
-        "collection_items_terminated_by": "'\\002'",
-        "external": false
+        "external": false,
+        "primary_key_enforced": null,
+        "clone": null
     },
     {
-        "table_name": "salesorderdetail",
-        "schema": "default",
+        "table_name": "D_Order_Date",
+        "schema": "dbo",
         "primary_key": [],
         "columns": [
             {
-                "name": "SalesOrderDetailID",
+                "name": "DateKey",
                 "type": "int",
-                "size": null,
+                "size": [
+                    10,
+                    0
+                ],
+                "identity": [
+                    1,
+                    1
+                ],
                 "references": null,
                 "unique": false,
-                "nullable": true,
-                "default": null,
+                "nullable": false,
+                "default": "NULL",
                 "check": null
             },
             {
-                "name": "SalesOrderID",
-                "type": "int",
+                "name": "OrderDateSql",
+                "type": "datetime",
                 "size": null,
                 "references": null,
                 "unique": false,
-                "nullable": true,
-                "default": null,
+                "nullable": false,
+                "default": "NULL",
                 "check": null
             },
             {
-                "name": "ProductID",
-                "type": "int",
+                "name": "OrderMothName",
+                "type": "nvarchar",
                 "size": null,
                 "references": null,
                 "unique": false,
                 "nullable": true,
-                "default": null,
+                "default": "NULL",
                 "check": null
             },
             {
-                "name": "OrderQty",
+                "name": "OrderMothNumber",
                 "type": "int",
-                "size": null,
+                "size": [
+                    10,
+                    0
+                ],
                 "references": null,
                 "unique": false,
                 "nullable": true,
-                "default": null,
+                "default": "NULL",
+                "check": null
+            }
+        ],
+        "alter": {},
+        "checks": [],
+        "index": [],
+        "partitioned_by": [],
+        "tablespace": null,
+        "external": false,
+        "primary_key_enforced": null,
+        "clone": null
+    },
+    {
+        "table_name": "D_Product",
+        "schema": "dbo",
+        "primary_key": [],
+        "columns": [
+            {
+                "name": "ProductKey",
+                "type": "int",
+                "size": [
+                    10,
+                    0
+                ],
+                "identity": [
+                    1,
+                    1
+                ],
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
+                "check": null
+            },
+            {
+                "name": "ProductName",
+                "type": "nvarchar",
+                "size": null,
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
+                "check": null
+            },
+            {
+                "name": "ProductNumber",
+                "type": "nvarchar",
+                "size": null,
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
+                "check": null
+            }
+        ],
+        "alter": {},
+        "checks": [],
+        "index": [],
+        "partitioned_by": [],
+        "tablespace": null,
+        "external": false,
+        "primary_key_enforced": null,
+        "clone": null
+    },
+    {
+        "table_name": "F_Internet_Sales",
+        "schema": "dbo",
+        "primary_key": [],
+        "columns": [
+            {
+                "name": "DateKey",
+                "type": "int",
+                "size": [
+                    10,
+                    0
+                ],
+                "identity": [
+                    1,
+                    1
+                ],
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
+                "check": null
+            },
+            {
+                "name": "IndividualCustomerKey",
+                "type": "int",
+                "size": [
+                    10,
+                    0
+                ],
+                "identity": [
+                    1,
+                    1
+                ],
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
+                "check": null
+            },
+            {
+                "name": "ProductKey",
+                "type": "int",
+                "size": [
+                    10,
+                    0
+                ],
+                "identity": [
+                    1,
+                    1
+                ],
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
+                "check": null
+            },
+            {
+                "name": "OrderProductQuantity",
+                "type": "smallint",
+                "size": [
+                    5,
+                    0
+                ],
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
                 "check": null
             },
             {
                 "name": "LineTotal",
-                "type": "decimal",
-                "size": null,
+                "type": "numeric",
+                "size": [
+                    38,
+                    6
+                ],
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
+                "check": null
+            },
+            {
+                "name": "UnitPrice",
+                "type": "money",
+                "size": [
+                    19,
+                    4
+                ],
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
+                "check": null
+            },
+            {
+                "name": "DiscountUnitPrice",
+                "type": "money",
+                "size": [
+                    19,
+                    4
+                ],
+                "references": null,
+                "unique": false,
+                "nullable": false,
+                "default": "NULL",
+                "check": null
+            },
+            {
+                "name": "ActualUnitPrice",
+                "type": "money",
+                "size": [
+                    19,
+                    4
+                ],
                 "references": null,
                 "unique": false,
                 "nullable": true,
-                "default": null,
+                "default": "NULL",
                 "check": null
             }
         ],
         "alter": {},
         "checks": [],
         "index": [],
-        "partitioned_by": [
-            {
-                "name": "batch_id",
-                "type": "int",
-                "size": null
-            },
-            {
-                "name": "batch_id2",
-                "type": "string",
-                "size": null
-            },
-            {
-                "name": "batch_32",
-                "type": "some_type",
-                "size": null
-            }
-        ],
-        "constraints": {
-            "references": [
-                {
-                    "table": "salesorder",
-                    "columns": [
-                        "SalesOrderID"
-                    ],
-                    "schema": null,
-                    "on_delete": null,
-                    "on_update": null,
-                    "deferrable_initially": null,
-                    "name": "SalesOrderID",
-                    "constraint_name": "salesorderdetail_fk_1"
-                }
-            ]
-        },
+        "partitioned_by": [],
         "tablespace": null,
-        "if_not_exists": true,
-        "temp": false,
-        "stored_as": "TEXTFILE",
-        "row_format": "DELIMITED",
-        "location": "'s3://datalake/table_name/v1'",
-        "fields_terminated_by": "','",
-        "lines_terminated_by": null,
-        "map_keys_terminated_by": "'\\003'",
-        "collection_items_terminated_by": "'\\002'",
-        "external": false
+        "external": false,
+        "primary_key_enforced": null,
+        "clone": null
     }
 ]
