@@ -1,0 +1,16 @@
+body {
+    margin:0;
+    background: #333;
+     text-align:center;
+     color:#ddd;
+     font-family: Signika Negative, Asap, sans-serif;
+   }
+   
+   svg {
+     display:block;
+     position:relative;
+     width:800px;
+     background:#1d1d1d;
+     
+     margin:20px auto;
+   }

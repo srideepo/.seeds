@@ -1,0 +1,121 @@
+<!-- 
+  1 svg with 2 rectangles in a 2 groups draggable with objects inside intact  
+  draw bezier path between rectangles
+  https://stackoverflow.com/questions/77500772/svg-bezier-path-connecting-two-divs
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      #board {
+        width: 100%;
+        height: 400px;
+        border: solid thin navy;
+        position: relative;
+      }
+
+      .card {
+        border: solid thin black;
+        width: 120px;
+        height: 80px;
+        position: absolute;
+        background-color: WhiteSmoke;
+      }
+
+      .card::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background-color: gray;
+        position: absolute;
+        left: -5px;
+        top: 60px;
+      }
+
+      .card::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background-color: gray;
+        position: absolute;
+        right: -5px;
+        top: 60px;
+      }
+
+      svg path {
+        stroke-width: 2px;
+        fill: none;
+      }   
+    </style>
+</head>
+<body>
+  <section class="section-block block-html">
+    <div id="board">
+      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+        <path d="M 0 0 L 20 20" stroke="black" data-from="0" data-to="1" />
+      </svg>
+      <div class="card" style="left: 10px;top: 10px"></div>
+      <div class="card" style="left: 200px;top: 50px"></div>
+    </div>
+  </section>
+
+  <script type="text/javascript">
+    const board = document.getElementById('board');
+    const svg = board.querySelector('svg');
+    const cardProps = {'width': 120, 'height': 80, 'offset': 65};
+
+    updatePaths();
+
+    function updatePaths() {
+      let paths = svg.querySelectorAll('path');
+      [...paths].forEach(path => {
+        let from = board.querySelectorAll(`div.card`)[path.dataset.from];
+        let to = board.querySelectorAll(`div.card`)[path.dataset.to];
+        let fromPoint = {
+          'left': from.offsetLeft + cardProps.width,
+          'top': from.offsetTop + cardProps.offset
+        };
+        let toPoint = {
+          'left': to.offsetLeft,
+          'top': to.offsetTop + cardProps.offset
+        };
+
+        path.setAttribute('d', `M ${fromPoint.left} ${fromPoint.top}
+        C ${fromPoint.left + 50} ${fromPoint.top} ${toPoint.left - 50} ${toPoint.top} ${toPoint.left} ${toPoint.top}`);
+      });
+    }
+
+    board.addEventListener('mousedown', e => {
+      switch (e.target.className) {
+        case 'card':
+          e.target.dataset.moving = "on";
+          e.target.mouse = {
+            left: e.layerX,
+            top: e.layerY
+          };
+          break;
+      }
+    });
+
+    board.addEventListener('mousemove', e => {
+      let card = board.querySelector('div[data-moving="on"]');
+      if (card) {
+        card.style.left = `${e.clientX - card.mouse.left - board.offsetLeft}px`;
+        card.style.top = `${e.clientY - card.mouse.top - board.offsetTop}px`;
+        updatePaths();
+      }
+    });
+
+    document.addEventListener('mouseup', e => {
+      let cards = board.querySelectorAll('div[data-moving]');
+      [...cards].forEach(card => card.dataset.moving = null);
+    });      
+  </script>
+</body>
+</html>
