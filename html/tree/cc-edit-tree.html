@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!--link rel="stylesheet" href="style.css"></link-->
+    <style>
+        body{
+            background-color: red;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            position: relative;
+            padding-left: 1.5em;
+        }
+        ul li::before {
+            content: "\00AB";
+            transform : rotate(180deg);
+            color: black;
+            position: absolute;
+            left: 0;
+            cursor: pointer;
+        }                  
+    </style>
+</head>
+<body>
+    <div>
+        <div id="content">
+            Doubleclick to add items</br>
+            - Double-click bullets to add siblings</br>
+            - Double-click text to add children</br>
+        </div>
+    </div>       
+    <script>
+        _id=0;
+        document.querySelector("#content").addEventListener('dblclick', addItem);
+
+        function addItem(evt){
+            _ele = evt.target;
+            console.log(_ele.nodeName);            
+            if(_ele.id=='content'){
+                //create new ul
+                _id += 1;                
+                _ele.appendChild(getCustomElement('UL', _id));
+                return
+            }
+            if(_ele.nodeName=='LI'){
+                //create new ul
+                _id += 1;
+                _ele.after(getCustomElement('LI', _id));
+                return
+            }
+            if(_ele.nodeName=='SPAN'){
+                //create new ul
+                _id += 1;
+                _ele.after(getCustomElement('UL', _id));
+                return                                
+            }   
+        }
+
+        function getCustomElement(eleName, eleId){
+            _spanele = document.createElement("span");
+            _spanele.appendChild(document.createTextNode("New Item [" + (eleId) + "]"));            
+            _childele = document.createElement("li");
+            _childele.appendChild(_spanele);            
+            _childele.setAttribute("contenteditable", "true");
+            _childele.setAttribute("id", eleId);            
+            if(eleName=='UL'){
+                _rootele = document.createElement("ul");
+                _rootele.appendChild(_childele);
+            }
+            else{
+                _rootele = _childele;
+            }
+            return _rootele;
+        }
+    </script>
+</body>
+</html>
