@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connect Rows by Dragging with Snapping</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #f0f0f0;
+      overflow: hidden;
+      position: relative;
+      font-family: sans-serif;
+    }
+
+    .block {
+      position: absolute;
+      background: white;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      cursor: grab;
+      user-select: none;
+      padding: 10px;
+      min-width: 150px;
+    }
+
+    .block table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .block td {
+      padding: 4px 6px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .block tr:last-child td {
+      border-bottom: none;
+    }
+
+    .block .key {
+      font-weight: bold;
+      color: #333;
+      background-color: #dbeeff;
+    }
+
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    #addBtn, #undoBtn {
+      position: fixed;
+      top: 20px;
+      padding: 10px 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+
+    #undoBtn {
+      top: 70px;
+      background-color: #f44336;
+    }
+
+    tr.connectable {
+      cursor: crosshair;
+    }
+
+    tr.connectable:hover {
+      background-color: #e0f7e0;
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+      font-size: 14px;
+      pointer-events: none;
+      z-index: 20;
+    }
+  </style>
+</head>
+<body>
+  <button id="addBtn">+ Add Table</button>
+  <button id="undoBtn">Undo</button>
+
+  <div id="container">
+    <div id="block1" class="block" style="left: 100px; top: 150px;">
+      <table>
+        <tr class="connectable"><td class="key">ID</td><td>001</td></tr>
+        <tr class="connectable"><td class="key">Name</td><td>Alpha</td></tr>
+        <tr class="connectable"><td class="key">Status</td><td>Active</td></tr>
+        <tr class="connectable"><td class="key">Level</td><td>5</td></tr>
+        <tr class="connectable"><td class="key">Score</td><td>320</td></tr>
+      </table>
+    </div>
+
+    <div id="block2" class="block" style="left: 400px; top: 300px;">
+      <table>
+        <tr class="connectable"><td class="key">ID</td><td>002</td></tr>
+        <tr class="connectable"><td class="key">Name</td><td>Beta</td></tr>
+        <tr class="connectable"><td class="key">Status</td><td>Inactive</td></tr>
+        <tr class="connectable"><td class="key">Level</td><td>3</td></tr>
+        <tr class="connectable"><td class="key">Score</td><td>210</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <!-- Arrow Marker Definition -->
+  <svg id="svg">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto">
+        <polygon points="0,0 10,5 0,10" fill="black"/>
+      </marker>
+    </defs>
+  </svg>
+
+  <script>
+    const svg = document.getElementById('svg');
+    const container = document.getElementById('container');
+    const addBtn = document.getElementById('addBtn');
+    const undoBtn = document.getElementById('undoBtn');
+    const tooltip = document.getElementById('tooltip');
+    let blockCount = 2;
+    let blocks = [document.getElementById('block1'), document.getElementById('block2')];
+    let draggingRow = null;
+    let tempPath = null;
+    let connections = [];
+
+    function makeDraggable(el) {
+      let offsetX = 0, offsetY = 0, dragging = false;
+
+      el.addEventListener('mousedown', (e) => {
+        if (e.target.tagName === 'TD') return; // Don't drag block if clicking inside a row
+        dragging = true;
+        offsetX = e.clientX - el.offsetLeft;
+        offsetY = e.clientY - el.offsetTop;
+        el.style.cursor = 'grabbing';
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (dragging) {
+          el.style.left = (e.clientX - offsetX) + 'px';
+          el.style.top = (e.clientY - offsetY) + 'px';
+          updateAllConnections();
+        }
+      });
+
+      document.addEventListener('mouseup', () => {
+        dragging = false;
+        el.style.cursor = 'grab';
+      });
+    }
+
+    function rowEdge(row, side = 'right') {
+      const rect = row.getBoundingClientRect();
+      const x = side === 'left' ? rect.left : rect.right;
+      const y = rect.top + rect.height / 2;
+      return { x, y };
+    }
+
+    function createPath(x1, y1, x2, y2) {
+      const dx = Math.abs(x2 - x1) * 0.5;
+      return `M ${x1},${y1} C ${x1 + dx},${y1} ${x2 - dx},${y2} ${x2},${y2}`;
+    }
+
+    function startRowDrag(row, side) {
+      draggingRow = row;
+      tempPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      tempPath.setAttribute("stroke", "blue");
+      tempPath.setAttribute("stroke-width", "2");
+      tempPath.setAttribute("fill", "none");
+      tempPath.setAttribute("marker-end", "url(#arrow)"); // Apply arrow marker to path
+      svg.appendChild(tempPath);
+
+      // Set starting edge (left or right)
+      const from = rowEdge(row, side);
+      tempPath.setAttribute("d", `M ${from.x},${from.y} C ${from.x},${from.y} ${from.x},${from.y} ${from.x},${from.y}`);
+    }
+
+    function endRowDrag(targetRow) {
+      if (
+        draggingRow && targetRow &&
+        draggingRow !== targetRow &&
+        !draggingRow.closest('.block').isSameNode(targetRow.closest('.block'))
+      ) {
+        const from = rowEdge(draggingRow, 'right');
+        const to = rowEdge(targetRow, 'left');
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("stroke", "black");
+        path.setAttribute("stroke-width", "2");
+        path.setAttribute("fill", "none");
+        path.setAttribute("marker-end", "url(#arrow)"); // Apply arrow marker to path
+        path.setAttribute("d", createPath(from.x, from.y, to.x, to.y));
+        svg.appendChild(path);
+        connections.push({ from: draggingRow, to: targetRow, path });
+      }
+
+      if (tempPath) {
+        svg.removeChild(tempPath);
+        tempPath = null;
+      }
+
+      draggingRow = null;
+    }
+
+    function updateAllConnections() {
+      connections.forEach(conn => {
+        const from = rowEdge(conn.from, 'right');
+        const to = rowEdge(conn.to, 'left');
+        conn.path.setAttribute("d", createPath(from.x, from.y, to.x, to.y));
+      });
+    }
+
+    function showTooltip(row) {
+      const rowData = Array.from(row.cells).map(cell => {
+        return `${cell.previousElementSibling ? cell.previousElementSibling.textContent : ''}: ${cell.textContent}`;
+      }).join('<br>');
+      tooltip.innerHTML = rowData;
+      tooltip.style.display = 'block';
+      const rect = row.getBoundingClientRect();
+      tooltip.style.left = `${rect.right + 10}px`;
+      tooltip.style.top = `${rect.top}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.style.display = 'none';
+    }
+
+    function setupRowDragging(block) {
+      const rows = block.querySelectorAll('tr.connectable');
+
+      rows.forEach(row => {
+        row.addEventListener('mousedown', e => {
+          e.stopPropagation(); // prevent block dragging
+          const side = e.clientX < row.getBoundingClientRect().left + row.offsetWidth / 2 ? 'left' : 'right';
+          startRowDrag(row, side);
+        });
+
+        row.addEventListener('mouseup', e => {
+          e.stopPropagation();
+          endRowDrag(row);
+        });
+
+        row.addEventListener('mouseover', () => showTooltip(row));
+        row.addEventListener('mouseout', hideTooltip);
+      });
+    }
+
+    document.addEventListener('mousemove', e => {
+      if (draggingRow && tempPath) {
+        const from = rowEdge(draggingRow, 'right');
+        const to = { x: e.clientX, y: e.clientY };
+
+        // Snapping logic for left and right approach
+        if (e.clientX < from.x) {
+          to.x = rowEdge(draggingRow, 'left').x;
+        } else {
+          to.x = rowEdge(draggingRow, 'right').x;
+        }
+
+        tempPath.setAttribute("d", createPath(from.x, from.y, to.x, to.y));
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (draggingRow) {
+        endRowDrag(null);
+      }
+    });
+
+    function createBlock() {
+      blockCount++;
+      const block = document.createElement('div');
+      block.className = 'block';
+      block.id = `block${blockCount}`;
+      block.style.left = 150 + (blockCount * 60) + 'px';
+      block.style.top = 150 + (blockCount * 30) + 'px';
+
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <tr class="connectable"><td class="key">ID</td><td>00${blockCount}</td></tr>
+        <tr class="connectable"><td class="key">Name</td><td>Gamma</td></tr>
+        <tr class="connectable"><td class="key">Status</td><td>Active</td></tr>
+        <tr class="connectable"><td class="key">Level</td><td>${blockCount}</td></tr>
+        <tr class="connectable"><td class="key">Score</td><td>${Math.floor(Math.random() * 500)}</td></tr>
+      `;
+
+      block.appendChild(table);
+      container.appendChild(block);
+      blocks.push(block);
+      makeDraggable(block);
+      setupRowDragging(block);
+    }
+
+    function undoLastConnection() {
+      const lastConnection = connections.pop();
+      if (lastConnection && lastConnection.path) {
+        svg.removeChild(lastConnection.path);
+      }
+    }
+
+    // Initial setup
+    blocks.forEach(makeDraggable);
+    blocks.forEach(setupRowDragging);
+
+    addBtn.addEventListener('click', () => {
+      createBlock();
+    });
+
+    undoBtn.addEventListener('click', undoLastConnection);
+
+    window.addEventListener('resize', updateAllConnections);
+    window.addEventListener('scroll', updateAllConnections);
+  </script>
+</body>
+</html>

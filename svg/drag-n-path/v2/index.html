@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connect Rows by Dragging with Snapping</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+
+  </style>
+</head>
+<body>
+  <button id="addBtn">+ Add Table</button>
+  <button id="arrangeBtn">Arrange</button>
+  <button id="drawPathBtn">Draw Path</button>
+  <button id="undoBtn">Undo</button>
+
+  <div id="container"></div>
+  <div id="tooltip" class="tooltip"></div>
+
+  <!-- Arrow Marker Definition -->
+  <svg id="svg">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto">
+        <polygon points="0,0 10,5 0,10" fill="black"/>
+      </marker>
+    </defs>
+  </svg>
+  <script lang="javascript" src="data.js"></script>
+  <script lang="javascript" src="script.js"></script>
+</body>
+</html>
