@@ -1,0 +1,11 @@
+"CREATE_TABLE_SQL"|"
+CREATE TABLE {{data[0].table_schema}}.{{data[0].table_name}}{%set comma_suffix = ',' %}
+(
+{%- for item in data -%}
+    {% if loop.index0 == data|length-1 -%} 
+        {%set comma_suffix = ''%} 
+    {%- endif %}
+{{'\t'}}{{item['column_name']}}  {{item['data_type']}} {{item['nullable']}} {{item['identity']}} {{item['default']}} {{item['primary_key']}}{{comma_suffix}}
+{%- endfor %}
+);
+--"
