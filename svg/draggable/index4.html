@@ -16,9 +16,15 @@
 </head>
 <body>
     <svg id="svgCanvas" width="500" height="500">
-        <rect id="rect1" class="draggable" x="50" y="50" width="100" height="100" fill="blue"></rect>
+        <g class="draggable">
+            <title id="title1">green box</title>
+            <rect id="rect1" x="50" y="50" width="100" height="100" fill="blue"></rect>
+        </g>
         <rect id="rect2" class="draggable" x="300" y="300" width="100" height="100" fill="green"></rect>
-        <path id="bezierPath" d="M 100 100 C 200 200, 200 200, 400 400" stroke="black" fill="transparent"></path>
+        <g>
+            <title id="title2">green line</title>
+            <path id="bezierPath" d="M 100 100 C 200 200, 200 200, 400 400" stroke="black" fill="transparent"></path>
+        </g>
     </svg>
 
     <script>
@@ -32,7 +38,7 @@
 
         svg.addEventListener('mousedown', function(event) {
             if (event.target.classList.contains('draggable')) {
-                selectedElement = event.target;
+                selectedElement = event.target.parentNode;
                 offset.x = event.clientX - selectedElement.getAttribute('x');
                 offset.y = event.clientY - selectedElement.getAttribute('y');
             }
@@ -51,6 +57,10 @@
         svg.addEventListener('mouseup', function() {
             selectedElement = null;
         });
+
+        /*svg.addEventListener('click', function(event) {
+            selectedElement = event.target;
+        });*/
 
         function updatePath() {
             const x1 = parseInt(rect1.getAttribute('x')) + 50;
