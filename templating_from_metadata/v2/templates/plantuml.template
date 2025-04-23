@@ -1,0 +1,22 @@
+"SOURCE_TO_TARGET_MAPPING"|"
+@startuml
+left to right direction
+
+class {{data[0].source_table_name|replace('.','_')}} {
+{% for item in data %}
+    + {{item['source_column_name']}}
+{% endfor %}
+}
+
+class {{data[0].target_table_name|replace('.','_')}} {
+{% for item in data %}
+    + {{item['target_column_name']}}
+{% endfor %}
+}
+
+{% for item in data %}
+{{item['target_table_name']|replace('.','_')}}::{{item['target_column_name']}} *-- {{item['source_table_name']|replace('.','_')}}::{{item['source_column_name']}}
+{% endfor %}
+
+@enduml
+--"
