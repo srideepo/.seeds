@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connect Rows by Dragging with Snapping</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+
+  </style>
+</head>
+<body>
+  <button id="exportBtn">Export Spec</button>
+
+  <div id="container"></div>
+  <div id="tooltip" class="tooltip"></div>
+  <!-- Arrow Marker Definition -->
+  <svg id="svg">
+    <defs>
+      <marker id="arrow" class="icon" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto">
+        <polygon points="0,0 10,5 0,10" fill="black"/>
+      </marker>
+    </defs>
+  </svg>
+
+  <template id="entityblock">
+    <div id="block_${data.tablename}" name="block_${data.tablename}" class="block" style="left: 940px; top: 162px; cursor: grab; position: absolute;">
+      <table id="${data.tablename}">
+        <caption name="block_${data.tablename}">${data.tablename}</caption>
+        <tbody>
+          <tr class="connectable" id="${data.tablename}.${data.name}">
+            <td>.</td>
+            <td class="key" >${data.name}</td>
+            <td>${data.type}</td>
+            <td>.</td>
+          </tr>
+          <tr>
+            <td colspan="4"><hr></td>
+          </tr>          
+        </tbody>
+      </table>
+    </div>
+  </template>
+
+  <script lang="javascript" src="data.js"></script>
+  <script lang="javascript" src="script.js"></script>
+</body>
+</html>
