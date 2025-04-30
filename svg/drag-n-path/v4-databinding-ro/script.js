@@ -281,7 +281,8 @@ function rearrange(_elem){
 }
 
 function exportSpecification() {
-    _export_text = JSON.stringify(erCoordinatesDict, null, 4);
+    _export_object = {"erSchemaDict":erSchemaDict, "erCoordinatesDict":erCoordinatesDict};
+    _export_text = JSON.stringify(_export_object, null, 4);
     console.log(_export_text)
     navigator.clipboard.writeText(_export_text);
     alert("Copied text to clipboard!");
