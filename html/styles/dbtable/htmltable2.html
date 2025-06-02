@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compact ER Diagram Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .table-container {
+            border: 2px solid #333;
+            border-radius: 4px;
+            overflow: hidden;
+            background: white;
+            width: 200px;
+            text-align: center;
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+            font-size: 12px;
+        }
+        .table-header {
+            background-color: #333;
+            color: white;
+            padding: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        td {
+            text-align: left;
+        }
+        .primary-key {
+            font-weight: bold;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+
+<div class="table-container">
+    <div class="table-header">Users</div>
+    <table>
+        <tr>
+            <th>Attribute</th>
+            <th>Type</th>
+        </tr>
+        <tr>
+            <td class="primary-key">id</td>
+            <td>INT (PK)</td>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td>VARCHAR</td>
+        </tr>
+        <tr>
+            <td>email</td>
+            <td>VARCHAR</td>
+        </tr>
+        <tr>
+            <td>created_at</td>
+            <td>DATETIME</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

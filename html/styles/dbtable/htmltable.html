@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ER Diagram Styled Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .table-container {
+            border: 2px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            width: 300px;
+            text-align: center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .table-header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        td {
+            text-align: left;
+        }
+        .primary-key {
+            font-weight: bold;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+
+<div class="table-container">
+    <div class="table-header">Users Table</div>
+    <table>
+        <tr>
+            <th>Attribute</th>
+            <th>Type</th>
+        </tr>
+        <tr>
+            <td class="primary-key">id</td>
+            <td>INT (PK)</td>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td>VARCHAR</td>
+        </tr>
+        <tr>
+            <td>email</td>
+            <td>VARCHAR</td>
+        </tr>
+        <tr>
+            <td>created_at</td>
+            <td>DATETIME</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

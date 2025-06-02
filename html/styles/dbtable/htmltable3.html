@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal ER Diagram Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+        }
+        .table-container {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            width: 150px;
+            text-align: center;
+            box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            font-size: 10px;
+        }
+        .table-header {
+            background-color: #e3e3e3;
+            color: #333;
+            padding: 3px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 2px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        td {
+            text-align: left;
+        }
+        .primary-key {
+            font-weight: bold;
+            color: #b33a3a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="table-container">
+    <div class="table-header">Users</div>
+    <table>
+        <tr>
+            <th>Attribute</th>
+            <th>Type</th>
+        </tr>
+        <tr>
+            <td class="primary-key">id</td>
+            <td>INT (PK)</td>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td>VARCHAR</td>
+        </tr>
+        <tr>
+            <td>email</td>
+            <td>VARCHAR</td>
+        </tr>
+        <tr>
+            <td>created_at</td>
+            <td>DATETIME</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
